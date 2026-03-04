@@ -6,14 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.Repository.StudentRepository;
+import com.example.demo.Repository.StudentsRepository;
 import com.example.demo.entity.Students;
 
 @Service
-public class StudentService {
+public class StudentsService {
 
     @Autowired
-    private StudentRepository repo;
+    private StudentsRepository repo;
 
 
     public Students createStudent(Students student) {
