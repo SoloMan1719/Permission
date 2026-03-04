@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.Service.StudentService;
-import com.example.demo.entity.Student;
+import com.example.demo.entity.Students;
 
 @RestController
 @RequestMapping("/principal")
@@ -17,7 +17,7 @@ public class PrincipalController {
     private StudentService service;
 
     @GetMapping("/all")
-    public List<Student> viewAllRequests(){
+    public List<Students> viewAllRequests(){
         return service.getAll();
     }
 }
