@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.Service.StudentService;
+import com.example.demo.Service.StudentsService;
 import com.example.demo.entity.Students;
 
 @RestController
@@ -14,7 +14,7 @@ import com.example.demo.entity.Students;
 public class HodController {
 
     @Autowired
-    private StudentService service;
+    private StudentsService service;
 
     @PutMapping("/approve/{rollNumber}")
     public Students approve(@PathVariable String rollNumber){
