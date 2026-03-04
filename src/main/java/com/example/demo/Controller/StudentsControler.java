@@ -5,16 +5,16 @@ package com.example.demo.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.Service.StudentService;
+import com.example.demo.Service.StudentsService;
 import com.example.demo.entity.Students;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api")
-public class StudentControler {
+public class StudentsControler {
 
     @Autowired
-    private StudentService service;
+    private StudentsService service;
 
    
     @PostMapping("/create")
