@@ -10,7 +10,7 @@ import com.example.demo.entity.Students;
 
 public interface StudentsRepository extends JpaRepository<Students, String>{
 
-	Optional<Student> findById(String rollNumber);
+	Optional<Students> findById(String rollNumber);
 
 	
 
