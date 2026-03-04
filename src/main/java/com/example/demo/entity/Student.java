@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 public class Student {
 
     @Id
+	@Column(name = "rollnumber")
     private String rollNumber;
 
     private String name;
