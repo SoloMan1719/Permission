@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.Service.StudentService;
-import com.example.demo.entity.Student;
+import com.example.demo.entity.Students;
 
 @RestController
 @RequestMapping("/hod")
@@ -17,16 +17,16 @@ public class HodController {
     private StudentService service;
 
     @PutMapping("/approve/{rollNumber}")
-    public Student approve(@PathVariable String rollNumber){
+    public Students approve(@PathVariable String rollNumber){
         return service.updateStatus(rollNumber, "APPROVED");
     }
 
     @PutMapping("/reject/{rollNumber}")
-    public Student reject(@PathVariable String rollNumber){
+    public Students reject(@PathVariable String rollNumber){
         return service.updateStatus(rollNumber, "REJECTED");
     }
     @GetMapping("/all")
-    public List<Student> viewAllRequests(){
+    public List<Students> viewAllRequests(){
         return service.getAll();
     }
 }
