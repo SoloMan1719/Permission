@@ -2,99 +2,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>College Permission System - Full Dashboard</title>
+    <title>MIET - Mandava Institute of Engineering and Technology</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; }
-        header { background: #2c3e50; color: white; padding: 15px 50px; text-align: center; display: none; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .container { width: 90%; margin: 30px auto; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f7f6; overflow-x: hidden; }
+
+        /* --- LOGIN PAGE --- */
+        #loginPage {
+            height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('Mandava login3.jpg'); 
+            background-size: cover; background-position: center; position: fixed; top: 0; left: 0; z-index: 1000;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.15); padding: 40px; border-radius: 25px; backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3); width: 380px; text-align: center; color: white;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: fadeInScale 0.6s ease;
+        }
+
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .login-card h1 { font-size: 42px; margin: 0; color: #ff4d4d; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px; outline: none; background: white; color: #333; box-sizing: border-box; }
         
-        /* Inputs */
-        .password-container { position: relative; width: 90%; margin: 10px auto; }
-        .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; box-sizing: border-box; }
-        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #7f8c8d; }
-        #loginPage { max-width: 400px; margin: 80px auto; text-align: center; border-top: 5px solid #3498db; }
-        
-        /* Dashboard Visibility */
+        /* PASSWORD CONTAINER FOR EYE ICON */
+        .password-wrapper { position: relative; width: 100%; }
+        .eye-icon { 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+            color: #333; cursor: pointer; font-size: 18px; 
+        }
+
+        .btn-login { background: #ff6b6b; color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 17px; transition: 0.3s; }
+        .btn-login:hover { background: #ff0000; transform: translateY(-2px); }
+
+        /* --- MARQUEE STYLE --- */
+        .welcome-news {
+            background: #e74c3c; color: white; padding: 10px 0; font-weight: bold; 
+            display: none; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header { background: #2c3e50; color: white; padding: 15px 50px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .container { width: 95%; margin: 20px auto; display: none; }
         .dashboard { display: none; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; margin: 5px; }
-        .btn-login { background: #3498db; color: white; width: 90%; }
-        .btn-logout { background: #e74c3c; color: white; }
-        .btn-submit { background: #2ecc71; color: white; }
-        .btn-status { background: #9b59b6; color: white; }
-        .btn-close { background: #ff4757; color: white; font-size: 12px; padding: 5px 10px; float: right; }
-
-        /* Status Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { padding: 12px; border: 1px solid #eee; text-align: center; }
-        th { background: #34495e; color: white; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid #ff4d4d; position: relative; }
         
-        /* Status Badges */
-        .status-PENDING { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
-        .status-APPROVED { background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
-        .status-REJECTED { background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #34495e; font-size: 14px; }
+        .dash-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
 
-        #statusResult { display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 12px; border: 1px solid #eee; text-align: center; }
+        th { background: #34495e; color: white; text-transform: uppercase; font-size: 13px; }
+        
+        .row-hidden { display: none !important; }
+
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .PENDING { background: #fff3cd; color: #856404; }
+        .APPROVED { background: #d4edda; color: #155724; }
+        .REJECTED { background: #f8d7da; color: #721c24; }
+
+        .btn-action { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; margin: 2px; }
+        .btn-approve { background: #27ae60; }
+        .btn-reject { background: #e74c3c; }
+        .btn-close-row { background: #95a5a6; }
+        .btn-close-row:hover { background: #7f8c8d; }
+        
+        .btn-track { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
+<div id="loginPage">
+    <div class="login-card">
+        <h1>MIET</h1>
+        <p>Mandava Institute of Engineering and Technology</p>
+        <input type="text" id="username" class="login-input" placeholder="UserName">
+        
+        <div class="password-wrapper">
+            <input type="password" id="password" class="login-input" placeholder="Password">
+            <i class="fa-solid fa-eye eye-icon" id="togglePassword" onclick="togglePW()"></i>
+        </div>
+        
+        <button class="btn-login" onclick="login()">SIGN IN</button>
+    </div>
+</div>
+
+<div id="marqueeContainer" class="welcome-news">
+    <marquee behavior="scroll" direction="left">Welcome to Mandava Outpass Portal - MIET Management System</marquee>
+</div>
+
 <header id="mainHeader">
-    <span style="font-weight: bold;">COLLEGE MANAGEMENT</span>
+    <div><i class="fa-solid fa-school"></i> <span style="font-size: 20px; font-weight: bold; margin-left: 10px;">MIET Portal</span></div>
     <div id="userInfo"></div>
-    <button class="btn-logout" onclick="logout()">Logout</button>
+    <button onclick="location.reload()" style="background:#ff4757; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight: bold;">Logout</button>
 </header>
 
-<div class="container">
-
-    <div id="loginPage" class="card">
-        <h2>Portal Login</h2>
-        <div style="width: 90%; margin: auto;">
-            <input type="text" id="username" class="login-input" style="margin-bottom: 10px;" placeholder="Username">
-        </div>
-        <div class="password-container">
-            <input type="password" id="password" class="login-input" placeholder="Password">
-            <i class="fa-solid fa-eye toggle-password" id="eyeIcon" onclick="togglePassword()"></i>
-        </div>
-        <button class="btn-login" onclick="login()">Sign In</button>
-    </div>
-
+<div class="container" id="mainContainer">
     <div id="studentDash" class="dashboard">
         <div class="card">
-            <h3>📋 Submit Leave Request</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <input type="text" id="roll" class="login-input" placeholder="Roll Number">
-                <input type="text" id="name" class="login-input" placeholder="Full Name">
-                <input type="text" id="branch" class="login-input" placeholder="Branch">
-                <input type="text" id="subject" class="login-input" placeholder="Reason">
-                <input type="date" id="fromDate" class="login-input">
-                <input type="date" id="toDate" class="login-input">
+            <h2 style="color:#2c3e50;"><i class="fa-solid fa-file-signature"></i> Leave Permission Form</h2>
+            <div class="form-grid">
+                <div><label>Roll Number</label><input type="text" id="roll" class="dash-input" placeholder="Enter RollNumber" required></div>
+                <div><label>Full Name</label><input type="text" id="name" class="dash-input" placeholder="Enter Name" required></div>
+                <div><label>Branch</label><input type="text" id="branch" class="dash-input" placeholder="Enter branch" required></div>
+                <div><label>Reason / Subject</label><input type="text" id="subject" class="dash-input" placeholder="Reason for leave" required></div>
+                <div><label>From Date</label><input type="date" id="fromDate" class="dash-input" required></div>
+                <div><label>To Date</label><input type="date" id="toDate" class="dash-input" required></div>
             </div>
-            <button class="btn-submit" onclick="sendRequest()">Submit to HOD</button>
+            <button class="btn-login" style="width:250px; margin-top:25px;" onclick="sendRequest()">Send to HOD Approval</button>
         </div>
 
-        <div class="card" style="border-top: 5px solid #9b59b6;">
-            <h3>🔍 Track My Request Status</h3>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="trackRoll" class="login-input" style="width: 300px;" placeholder="Enter Roll Number">
-                <button class="btn-status" onclick="checkMyStatus()">Check Status</button>
+        <div class="card" style="border-top: 5px solid #3498db;">
+            <h2 style="color:#2c3e50;"><i class="fa-solid fa-magnifying-glass"></i> Track My Request Status</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <input type="text" id="trackRoll" class="dash-input" style="max-width: 300px;" placeholder="Enter Your Roll Number">
+                <button class="btn-track" onclick="trackStatus()">Check Status</button>
             </div>
-            
-            <div id="statusResult">
-                <button class="btn-close" onclick="closeStatus()">Close ✖</button>
-                <div id="statusTableBody"></div>
-            </div>
+            <div id="trackResult"></div>
         </div>
     </div>
 
     <div id="hodDash" class="dashboard">
         <div class="card">
-            <h3>👨‍🏫 HOD Review Panel</h3>
+            <h2>👨‍🏫 HOD Approval Panel</h2>
             <table id="hodTable">
-                <thead><tr><th>Roll</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+                <thead>
+                    <tr><th>Roll No</th><th>Name</th><th>Branch</th><th>Reason</th><th>From</th><th>To</th><th>Status</th><th>Action</th></tr>
+                </thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -102,47 +137,71 @@
 
     <div id="principalDash" class="dashboard">
         <div class="card">
-            <h3>🏛️ Principal Final Approval</h3>
+            <h2>🏛️ Principal Final Approval</h2>
             <table id="principalTable">
-                <thead><tr><th>Roll</th><th>Name</th><th>Branch</th><th>HOD Status</th><th>Decision</th></tr></thead>
+                <thead>
+                    <tr><th>Roll No</th><th>Name</th><th>Branch</th><th>Dates</th><th>HOD Status</th><th>Action</th></tr>
+                </thead>
                 <tbody></tbody>
             </table>
         </div>
     </div>
-
 </div>
 
 <script>
-    const API = "http://localhost:8082";
-
-    function togglePassword() {
-        const p = document.getElementById("password");
-        const i = document.getElementById("eyeIcon");
-        p.type = p.type === "password" ? "text" : "password";
-        i.classList.toggle("fa-eye");
-        i.classList.toggle("fa-eye-slash");
+    // NEW: Toggle Password Visibility
+    function togglePW() {
+        const passwordField = document.getElementById("password");
+        const icon = document.getElementById("togglePassword");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
     }
 
-    function login() {
-        const u = document.getElementById("username").value;
-        const p = document.getElementById("password").value;
-        let role = "";
-        if(u === "Student" && p === "Student123") role = "student";
-        else if(u === "Hod" && p === "Hod123") role = "hod";
-        else if(u === "Principal" && p === "Principal123") role = "principal";
-        else { alert("Invalid Credentials!"); return; }
+	function login() {
+	    const u = document.getElementById("username").value.trim(); 
+	    const p = document.getElementById("password").value;
 
-        document.getElementById("loginPage").style.display = "none";
-        document.getElementById("mainHeader").style.display = "flex";
-        document.getElementById("userInfo").innerText = "Welcome, " + u;
-        document.getElementById(role + "Dash").style.display = "block";
-        if(role !== "student") loadRequests();
+	    if (u === "Student" && p === "Student123") {
+	        showDashboard("studentDash", u);
+	    } 
+	    else if (u === "Hod" && p === "Hod123") {
+	        showDashboard("hodDash", u);
+	        loadRequests();
+	    } 
+	    else if (u === "Principal" && p === "Principal123") {
+	        showDashboard("principalDash", u);
+	        loadRequests();
+	    } 
+	    else {
+	        alert("Invalid Username or Password!");
+	    }
+	}
+
+	function showDashboard(dashId, user) {
+	    document.getElementById("loginPage").style.display = "none";
+	    document.getElementById("marqueeContainer").style.display = "block";
+	    document.getElementById("mainHeader").style.display = "flex";
+	    document.getElementById("mainContainer").style.display = "block";
+	    document.getElementById("userInfo").innerHTML = `<i class="fa-solid fa-circle-user"></i> ${user.toUpperCase()}`;
+	    
+	    document.querySelectorAll('.dashboard').forEach(dash => dash.style.display = 'none');
+	    document.getElementById(dashId).style.display = "block";
+	}
+
+    function closeRow(rowId) {
+        document.getElementById(rowId).classList.add('row-hidden');
     }
-
-    function logout() { location.reload(); }
 
     function sendRequest() {
-        let data = {
+        const req = {
+            id: 'req_' + Date.now(),
             rollNumber: document.getElementById("roll").value,
             name: document.getElementById("name").value,
             branch: document.getElementById("branch").value,
@@ -151,70 +210,73 @@
             toDate: document.getElementById("toDate").value,
             status: "PENDING"
         };
-        fetch(API + "/api/create", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data) })
-        .then(() => alert("Request Sent!"));
+        if(!req.rollNumber || !req.name) { alert("Fill all details!"); return; }
+        let db = JSON.parse(localStorage.getItem("miet_db")) || [];
+        db.push(req);
+        localStorage.setItem("miet_db", JSON.stringify(db));
+        alert("Request sent successfully!");
+        location.reload(); 
     }
 
-    // --- Student Status Logic ---
-    function checkMyStatus() {
-        const roll = document.getElementById("trackRoll").value;
-        if(!roll) return;
-
-        fetch(API + "/hod/all")
-        .then(res => res.json())
-        .then(data => {
-            const myData = data.filter(r => r.rollNumber === roll);
-            let html = "";
-            if(myData.length > 0) {
-                html = `<table><thead><tr><th>Roll</th><th>Reason</th><th>Status</th></tr></thead><tbody>`;
-                myData.forEach(m => {
-                    html += `<tr><td>${m.rollNumber}</td><td>${m.subject}</td><td><span class="status-${m.status}">${m.status}</span></td></tr>`;
-                });
-                html += `</tbody></table>`;
-                document.getElementById("statusTableBody").innerHTML = html;
-                document.getElementById("statusResult").style.display = "block";
-            } else {
-                alert("No requests found for this roll number.");
-            }
+    function trackStatus() {
+        const roll = document.getElementById("trackRoll").value.trim();
+        const db = JSON.parse(localStorage.getItem("miet_db")) || [];
+        const myRequests = db.filter(r => r.rollNumber === roll);
+        if(myRequests.length === 0) {
+            document.getElementById("trackResult").innerHTML = "<p style='color:red;'>No requests found.</p>";
+            return;
+        }
+        let html = "<table><thead><tr><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody>";
+        myRequests.forEach((r, idx) => {
+            const rowId = `track_row_${idx}`;
+            html += `<tr id="${rowId}">
+                <td>${r.subject}</td>
+                <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                <td><button class="btn-action btn-close-row" onclick="closeRow('${rowId}')">Close</button></td>
+            </tr>`;
         });
+        html += "</tbody></table>";
+        document.getElementById("trackResult").innerHTML = html;
     }
 
-    function closeStatus() {
-        document.getElementById("statusResult").style.display = "none";
-    }
-
-    // --- Admin Logic ---
     function loadRequests() {
-        fetch(API + "/hod/all")
-        .then(res => res.json())
-        .then(data => {
-            renderHOD(data);
-            renderPrincipal(data);
+        const data = JSON.parse(localStorage.getItem("miet_db")) || [];
+        
+        let hRows = "";
+        data.forEach((r, index) => {
+            const rowId = `hod_row_${index}`;
+            hRows += `<tr id="${rowId}">
+                <td>${r.rollNumber}</td><td>${r.name}</td><td>${r.branch}</td><td>${r.subject}</td><td>${r.fromDate}</td><td>${r.toDate}</td>
+                <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                <td>
+                    <button class="btn-action btn-approve" onclick="updateStatus(${index}, 'APPROVED')">Approve</button>
+                    <button class="btn-action btn-reject" onclick="updateStatus(${index}, 'REJECTED')">Reject</button>
+                    <button class="btn-action btn-close-row" onclick="closeRow('${rowId}')">Close</button>
+                </td>
+            </tr>`;
         });
+        document.querySelector("#hodTable tbody").innerHTML = hRows;
+
+        let pRows = "";
+        data.forEach((r, index) => {
+            const rowId = `prin_row_${index}`;
+            pRows += `<tr id="${rowId}">
+                <td>${r.rollNumber}</td><td>${r.name}</td><td>${r.branch}</td><td>${r.fromDate} to ${r.toDate}</td>
+                <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                <td>
+                    <button class="btn-action" style="background:#3498db" onclick="alert('Principal Approved!')">Sign</button>
+                    <button class="btn-action btn-close-row" onclick="closeRow('${rowId}')">Close</button>
+                </td>
+            </tr>`;
+        });
+        document.querySelector("#principalTable tbody").innerHTML = pRows;
     }
 
-    function renderHOD(data) {
-        let h = "";
-        data.forEach(r => {
-            h += `<tr><td>${r.rollNumber}</td><td>${r.name}</td><td>${r.subject}</td><td><span class="status-${r.status}">${r.status}</span></td>
-            <td><button style="background:#2ecc71;color:white;" onclick="updateStatus('${r.rollNumber}','approve')">Approve</button>
-            <button style="background:#e74c3c;color:white;" onclick="updateStatus('${r.rollNumber}','reject')">Reject</button></td></tr>`;
-        });
-        document.querySelector("#hodTable tbody").innerHTML = h;
-    }
-
-    function renderPrincipal(data) {
-        let h = "";
-        data.forEach(r => {
-            let s = r.status === 'APPROVED' ? "✅ HOD Approved" : (r.status==='REJECTED' ? "❌ Rejected" : "⏳ Pending");
-            h += `<tr><td>${r.rollNumber}</td><td>${r.name}</td><td>${r.branch}</td><td>${s}</td>
-            <td><button style="background:#3498db;color:white;" ${(r.status!=='APPROVED')?'disabled':''} onclick="alert('Signed')">Sign</button></td></tr>`;
-        });
-        document.querySelector("#principalTable tbody").innerHTML = h;
-    }
-
-    function updateStatus(roll, action) {
-        fetch(`${API}/hod/${action}/${roll}`, { method: "PUT" }).then(() => loadRequests());
+    function updateStatus(index, newStatus) {
+        let data = JSON.parse(localStorage.getItem("miet_db"));
+        data[index].status = newStatus;
+        localStorage.setItem("miet_db", JSON.stringify(data));
+        loadRequests();
     }
 </script>
 </body>
