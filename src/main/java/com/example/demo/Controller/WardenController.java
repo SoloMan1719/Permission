@@ -1,23 +1,31 @@
 package com.example.demo.Controller;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.Service.StudentsService;
-import com.example.demo.entity.Students;
+import com.example.demo.Service.StudentService;
+import com.example.demo.entity.Student;
 
 @RestController
-@RequestMapping("/warden")
+@RequestMapping("/Warden")
 @CrossOrigin("*")
 public class WardenController {
+	 @Autowired
+	    private StudentService service;
 
-    @Autowired
-    private StudentsService service;
+	    @PutMapping("/approves/{rollNumber}")
+	    public Student approve(@PathVariable String rollNumber){
+	        return service.updateStatus(rollNumber, "APPROVED");
+	    }
 
-    @GetMapping("/all")
-    public List<Students> getAllRequests(){
-        return service.getAll();
-    }
+	    @PutMapping("/rejects/{rollNumber}")
+	    public Student reject(@PathVariable String rollNumber){
+	        return service.updateStatus(rollNumber, "REJECTED");
+	    }
+	    @GetMapping("/all")
+	    public List<Student> viewAllRequests(){
+	        return service.getAll();
+	    }
+	
 }
