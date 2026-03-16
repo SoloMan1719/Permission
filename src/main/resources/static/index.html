@@ -16,6 +16,18 @@
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('Mandava login3.jpg'); 
             background-size: cover; background-position: center; position: fixed; top: 0; left: 0; z-index: 1000;
         }
+		.WARDEN\ APPROVED {background:#d4edda;color:#155724;}
+		.WARDEN\ REJECTED {background:#f8d7da;color:#721c24;}
+
+		.HOD\ APPROVED {background:#cce5ff;color:#004085;}
+		.HOD\ REJECTED {background:#f8d7da;color:#721c24;}
+
+		.PRINCIPAL\ APPROVED {background:#d1ecf1;color:#0c5460;}
+		.PRINCIPAL\ REJECTED {background:#f8d7da;color:#721c24;}
+		.WARDEN_APPROVED {
+		background: #e0f7fa;
+		color: #006064;
+		}
 
         .login-card {
             background: rgba(255, 255, 255, 0.15); border-radius: 25px; backdrop-filter: blur(15px);
@@ -129,6 +141,26 @@
             <div id="trackResult"></div>
         </div>
     </div>
+	<div id="wardenDash" class="dashboard">
+	    <div class="card">
+	        <h2>🏫 Warden Approval Panel</h2>
+	        <table id="wardenTable">
+	            <thead>
+	                <tr>
+	                    <th>Roll No</th>
+	                    <th>Name</th>
+	                    <th>Branch</th>
+	                    <th>Reason</th>
+	                    <th>From</th>
+	                    <th>To</th>
+	                    <th>Status</th>
+	                    <th>Action</th>
+	                </tr>
+	            </thead>
+	            <tbody></tbody>
+	        </table>
+	    </div>
+	</div>
 
     <div id="hodDash" class="dashboard">
         <div class="card">
@@ -169,14 +201,27 @@
         }
     }
 
-    function login() {
-        const u = document.getElementById("username").value.trim(); 
-        const p = document.getElementById("password").value;
-        if (u === "Student" && p === "Student123") showDashboard("studentDash", u);
-        else if (u === "Hod" && p === "Hod123") { showDashboard("hodDash", u); loadRequests(); }
-        else if (u === "Principal" && p === "Principal123") { showDashboard("principalDash", u); loadRequests(); }
-        else alert("Invalid Credentials!");
-    }
+	function login() {
+	    const u = document.getElementById("username").value.trim(); 
+	    const p = document.getElementById("password").value;
+
+	    if (u === "Student" && p === "Student123") {
+	        showDashboard("studentDash", u);
+	    }
+	    else if (u === "Warden" && p === "Warden123") {
+	        showDashboard("wardenDash", u);
+	        loadRequests();
+	    }
+	    else if (u === "Hod" && p === "Hod123") {
+	        showDashboard("hodDash", u);
+	        loadRequests();
+	    }
+	    else if (u === "Principal" && p === "Principal123") {
+	        showDashboard("principalDash", u);
+	        loadRequests();
+	    }
+	    else alert("Invalid Credentials!");
+	}
 
     function showDashboard(dashId, user) {
         document.getElementById("loginPage").style.display = "none";
@@ -221,33 +266,93 @@
         document.getElementById("trackResult").innerHTML = html + "</tbody></table>";
     }
 
-    function loadRequests() {
-        const data = JSON.parse(localStorage.getItem("miet_db")) || [];
-        let hRows = "";
-        data.forEach((r, index) => {
-            hRows += `<tr>
-                <td>${r.rollNumber}</td><td>${r.name}</td><td>${r.branch}</td><td>${r.subject}</td><td>${r.fromDate}</td><td>${r.toDate}</td>
-                <td><span class="status-badge ${r.status}">${r.status}</span></td>
-                <td>
-                    <button class="btn-action" style="background:#27ae60" onclick="updateStatus(${index}, 'HOD_APPROVED')">Approve</button>
-                    <button class="btn-action" style="background:#e74c3c" onclick="updateStatus(${index}, 'REJECTED')">Reject</button>
-                </td>
-            </tr>`;
-        });
-        document.querySelector("#hodTable tbody").innerHTML = hRows;
+	function loadRequests(){
 
-        let pRows = "";
-        data.filter(x => x.status === "HOD_APPROVED").forEach((r) => {
-            const realIdx = data.findIndex(item => item.id === r.id);
-            pRows += `<tr>
-                <td>${r.rollNumber}</td><td>${r.name}</td><td>${r.branch}</td><td>${r.fromDate} to ${r.toDate}</td>
-                <td><span class="status-badge ${r.status}">${r.status}</span></td>
-                <td><button class="btn-action" style="background:#3498db" onclick="updateStatus(${realIdx}, 'APPROVED')">Final Sign</button></td>
-            </tr>`;
-        });
-        document.querySelector("#principalTable tbody").innerHTML = pRows;
-    }
+	const data = JSON.parse(localStorage.getItem("miet_db")) || [];
 
+	let wRows="";
+	let hRows="";
+	let pRows="";
+
+	data.forEach((r,index)=>{
+
+	// WARDEN ROW
+	const wardenRow = `
+	<tr>
+	<td>${r.rollNumber}</td>
+	<td>${r.name}</td>
+	<td>${r.branch}</td>
+	<td>${r.subject}</td>
+	<td>${r.fromDate}</td>
+	<td>${r.toDate}</td>
+	<td><span class="status-badge">${r.status}</span></td>
+	<td>
+
+	<button class="btn-action" style="background:#27ae60"
+	onclick="updateStatus(${index},'WARDEN APPROVED')">Approve</button>
+
+	<button class="btn-action" style="background:#e74c3c"
+	onclick="updateStatus(${index},'WARDEN REJECTED')">Reject</button>
+
+	</td>
+	</tr>
+	`;
+
+
+	// HOD ROW
+	const hodRow = `
+	<tr>
+	<td>${r.rollNumber}</td>
+	<td>${r.name}</td>
+	<td>${r.branch}</td>
+	<td>${r.subject}</td>
+	<td>${r.fromDate}</td>
+	<td>${r.toDate}</td>
+	<td><span class="status-badge">${r.status}</span></td>
+	<td>
+
+	<button class="btn-action" style="background:#27ae60"
+	onclick="updateStatus(${index},'HOD APPROVED')">Approve</button>
+
+	<button class="btn-action" style="background:#e74c3c"
+	onclick="updateStatus(${index},'HOD REJECTED')">Reject</button>
+
+	</td>
+	</tr>
+	`;
+
+
+	// PRINCIPAL ROW
+	const principalRow = `
+	<tr>
+	<td>${r.rollNumber}</td>
+	<td>${r.name}</td>
+	<td>${r.branch}</td>
+	<td>${r.fromDate} to ${r.toDate}</td>
+	<td><span class="status-badge">${r.status}</span></td>
+	<td>
+
+	<button class="btn-action" style="background:#3498db"
+	onclick="updateStatus(${index},'PRINCIPAL APPROVED')">Approve</button>
+
+	<button class="btn-action" style="background:#e74c3c"
+	onclick="updateStatus(${index},'PRINCIPAL REJECTED')">Reject</button>
+
+	</td>
+	</tr>
+	`;
+
+	wRows += wardenRow;
+	hRows += hodRow;
+	pRows += principalRow;
+
+	});
+
+	document.querySelector("#wardenTable tbody").innerHTML = wRows;
+	document.querySelector("#hodTable tbody").innerHTML = hRows;
+	document.querySelector("#principalTable tbody").innerHTML = pRows;
+
+	}
     function updateStatus(index, newStatus) {
         let data = JSON.parse(localStorage.getItem("miet_db"));
         data[index].status = newStatus;
