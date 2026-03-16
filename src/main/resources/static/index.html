@@ -188,7 +188,6 @@
 </div>
 
 <script>
-	const API = "https://permission-m1s8.onrender.com";
     // Logic is untouched to ensure zero functionality loss
     function togglePW() {
         const passwordField = document.getElementById("password");
@@ -245,17 +244,11 @@
             toDate: document.getElementById("toDate").value,
             status: "PENDING"
         };
-      fetch(API + "/student/apply", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(req)
-})
-.then(res => res.json())
-.then(data => {
-alert("Request sent successfully");
-});
+        let db = JSON.parse(localStorage.getItem("miet_db")) || [];
+        db.push(req);
+        localStorage.setItem("miet_db", JSON.stringify(db));
+        alert("Request sent successfully!");
+        location.reload(); 
     }
 
     function trackStatus() {
@@ -274,25 +267,8 @@ alert("Request sent successfully");
     }
 
 	function loadRequests(){
-fetch(API + "/hod/all")
-.then(res => res.json())
-.then(data => {
 
-let wRows="";
-let hRows="";
-let pRows="";
-
-data.forEach((r,index)=>{
-
-// mee existing table code same ga use cheyyi
-
-});
-
-document.querySelector("#wardenTable tbody").innerHTML = wRows;
-document.querySelector("#hodTable tbody").innerHTML = hRows;
-document.querySelector("#principalTable tbody").innerHTML = pRows;
-
-});
+	const data = JSON.parse(localStorage.getItem("miet_db")) || [];
 
 	let wRows="";
 	let hRows="";
