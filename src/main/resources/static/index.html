@@ -274,8 +274,25 @@ alert("Request sent successfully");
     }
 
 	function loadRequests(){
+fetch(API + "/hod/all")
+.then(res => res.json())
+.then(data => {
 
-	const data = JSON.parse(localStorage.getItem("miet_db")) || [];
+let wRows="";
+let hRows="";
+let pRows="";
+
+data.forEach((r,index)=>{
+
+// mee existing table code same ga use cheyyi
+
+});
+
+document.querySelector("#wardenTable tbody").innerHTML = wRows;
+document.querySelector("#hodTable tbody").innerHTML = hRows;
+document.querySelector("#principalTable tbody").innerHTML = pRows;
+
+});
 
 	let wRows="";
 	let hRows="";
